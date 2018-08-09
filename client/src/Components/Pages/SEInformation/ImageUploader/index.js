@@ -26,6 +26,7 @@ class ImageUploader extends Component{
                 'Content-Type': 'multipart/form-data'
             }
         }).then(res => {
+          console.log(res.data,'hello from the othe side');
             this.setState({
                 ...this.state,
                 imageLink: res.data.Location,
