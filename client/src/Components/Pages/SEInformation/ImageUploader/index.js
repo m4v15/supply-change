@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import './style.css';
-import Button from '../../../CommonComponents/Button';
 import axios from 'axios';
+
+import Uploader from './uploader';
+
+import './style.css';
 
 class ImageUploader extends Component{
 
@@ -17,16 +19,16 @@ class ImageUploader extends Component{
             image: e.target.files
         });
     }
-
+    
     uploadImage = (e) => {
         const formData = new FormData();
         formData.append('image', this.state.image[0]);
         axios.post(`/upload-image`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
-            }
+            },
+            withCredentials: true 
         }).then(res => {
-          console.log(res.data,'hello from the othe side');
             this.setState({
                 ...this.state,
                 imageLink: res.data.Location,
@@ -34,27 +36,17 @@ class ImageUploader extends Component{
             },()=>{
               this.props.setImgLink(res.data.Location)
             })
-            console.log('res=> ', res)
         }).catch(err => {
-          console.log(err);
             this.setState({
                 ...this.state,
                 msg: `Can't upload the image / Check your internet connection`
             })
-            console.log('err=> ', err)
         });
     }
 
     render(){
         return(
-            <section className='uploadFile__file-upload'>
-                <label htmlFor='uploadFile__logo'>
-                    <img className='uploadFile__img-label' src='/images/upload.svg' alt='upload logo' />
-                </label>
-                <input id='uploadFile__logo' type='file' name='image' accept='image/*' onChange={this.handleImage} required/>
-                <div>{ this.state.msg }</div>
-                <Button className="uploadFile__btn" onClick = { this.uploadImage } children="click to upload"/>
-            </section>
+            <Uploader handleImage={ this.handleImage } uploadImage={ this.uploadImage } msg={ this.state.msg }/>
         )
     }
 }

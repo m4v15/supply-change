@@ -24,7 +24,6 @@ module.exports = (req, res) => {
             ContentType: type.mime,
             Key: `${name}.${type.ext}`
         };
-        
         return s3.upload(params).promise();
     };
 
